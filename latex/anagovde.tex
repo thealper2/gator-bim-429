@@ -1,0 +1,31 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{tabularx}
+
+% Kapak Sayfası için Ayarlar
+\title{Projenizin Başlığı}
+\author{Grup No: [Grup Numaranız]}
+\date{Teslim Tarihi: \today}
+
+\begin{document}
+	
+	\input{kapak_sayfasi}
+	\newpage
+	
+	\renewcommand{\contentsname}{İçindekiler}
+	\tableofcontents
+	\newpage
+	
+	\input{giris}
+	\input{literatur_ozeti}
+	\input{mimari_yapi}
+	\input{yazilimin_kullanimi}
+	\input{algoritma_aciklamasi}
+	\input{calisma_ornekleri}
+	\input{sonuclar_ve_yorumlanmasi}
+	\input{gelecekte_yapilabilecekler}
+	\input{referanslar}
+	
+\end{document}

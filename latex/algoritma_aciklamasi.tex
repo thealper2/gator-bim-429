@@ -1,0 +1,205 @@
+\section{Çerçevenin Algoritmasının Açıklanması}
+Kullanılan algoritmanın detaylı açıklaması, nasıl çalıştığı ve hangi problemleri çözdüğü...
+
+\subsection{Rassal Orman}
+Rassal orman (Random Forest), bir ensemble (bir araya getirme) algoritmasıdır. Hiper parametre seçimi yapmadan da iyi sonuçlar vermesinden dolayı popülerdir. Random Forest genellikle sınıflandırma ve regresyon problemlerini çözmek için kullanılır. Birden fazla alt ağaçlar oluşturarak overfitting'in önüne geçer. Her bir dal için Gini değişkeni hesaplanır. Alt daldaki Gini değişkeni, bir üst daldaki gini değişkeninden az ise o dal başarılıdır demektir. Yani en üstten en alta doğru gini değişkeni azalır. Hem sınıflandırma hem de regresyon problemlerini çözmek için kullanılır. Gözlemler bootstrap yöntemi ile , değişkenler Random subspace yöntemini kullanır. Random subspace tekniği, P adet değişkeni olan bir veri setinde, P'den daha az sayıda bir rastgele değişken seçerek her bir ağaç için, dallanmaların bu değişkenler üzerinden yapılması sağlanır. Böylece rastgelelik elde edilmiş olur. Bootstrap, benzer örnek oluşturmak için tek bir veri setini yeniden örnekleyen istatistiksel bir prosedürdür. Rastgele olacak şekilde asıl veri setinin 2/3'ü seçilir. Bootstrap veri setinde olmayan 1/3'lük kısıma "Out-of-Bag Dataset" denir. Random Forest, ensemble tekniğini kullanır. Ensemble, bir grup zayıf öğrenicinin güçlü bir öğrenici oluşturmak için bir araya gelmesidir. Ensemble, temelinde 2 yaklaşım vardır:
+\begin{itemize}
+\item \textbf{Bagging:} Birçok zayıf öğrenme modelini bağımsız olarak eğitip birleştirir. Ana fikir, veri kümesinin rastgele alt küme (bootstrap) kullanılarak farklı modellerin eğitilmesi ve bu modellerin sonuçlarının birleştirilmesidir. Temel amacı varyansı azaltmaktır.
+\item \textbf{Boosting:} Zayıf öğrenme modellerini ardışık olarak eğtiir ve her bir model, önceki modelin hatalarına odaklanır. Yani, hatalı sınıflandırılan örnekler üzerinde daha fazla vurgu yaparak performansı artrır. Boosting'in temel amacı bias'ı azalmaktır.
+\end{itemize}
+
+\subsubsection{Çalışma Prensibi ve Adımları}
+\begin{enumerate}
+\item \textbf{Veri Toplama:} Özellikler ve hedef değişken belirlenir.
+\item \textbf{Ağaç Oluşturma:} Birden fazla karar ağacı oluşturur. Her ağaç, rastgele seçilen alt örneklem verileri üzerinde kurulur. Aynı zamanda her düğümde rastgele seçilen bir alt küme özellik kullanılır. Bu, her ağacın farklı olduğu ve çeşitliliği artırdığı anlamına gelir.
+\item \textbf{Ağaçlar Arası Bağımsızlık:} Her ağac bağımsız olarak kurulur ve tahmin yapar. Bu, tek bir ağaç hatalı tahminlerde bulunursa, diğer ağaçlar da bu hatayı dengeleyebilir.
+\item \textbf{Tahmin Yapma:} Her ağacın verilen bir örnekleme için tahmin yapar. Sınıflandırma problemlerinde en çok oy alan sınıfı seçer. Regresyon problemlerinde tüm ağaçların tahminin ortalaması alınır.
+\end{enumerate}
+
+\subsection{Lojistik Regresyon}
+İsmini matematikteki, lojistik (sigmoid) fonksiyondan alır. Bir bağımlı değişkenin (genellikle kategorik) olasılığını tahmin etmek veya sınıflandırmak için kullanılan bir istatistiksel modeldir. Temel amacı, bir girdi örneğini belirli bir sınıfa ait olma olasılığını tahmin etmektir. Lineer regresyon ile arasındaki fark, Lineer regreson optimum çizgiyi çizmek için "En Küçük Kareler Yöntemi (Least Squares)", lojistik regreson "Maksimum Olabilirlik (Maksimum Likelihood)" kullanır. Sigmoid Fonksiyonu, verileri 0 ile 1 arasında sıkıştırmak için kullanılan fonksiyondur.
+
+\subsubsection{Çalışma Prensibi ve Adımları}
+$P(y=1|x) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x_1 + \beta_2 x_2 + \dots + \beta_n x_n)}}$
+Bu denklemde:
+\begin{itemize}
+   \item P(Y=1), bağımlı değişkenin 1 (başarı, pozitif sınıf) olma olasılığını temsil eder.
+   \item e, Euler sayısı (yaklaşık olarak 2.71828) olarak bilinir.
+   \item z, lojit (log-odds) değeridir ve şu şekilde hesaplanır: $z = b0 + b1_x1 + b2_x2 + ... + bn*xn$
+   \begin{itemize}
+      \item b0, kesme terimidir.
+      \item b1, b2, ..., bn, bağımsız değişkenlerin katsayılarıdır.
+      \item x1, x2, ..., xn, bağımsız değişkenlerin değerleridir.
+   \end{itemize}
+\end{itemize}
+
+\begin{enumerate}
+\item \textbf{Örnekleri Sınıflandırma:} Her bir örneği sınıflandırmak için bağımsız değişkenlerin ağırlıklı toplamını ve lojistik fonksiyonu kullanır. Bu sonuç, 0 ile 1 arasında bir olasılık değeridir.
+\item \textbf{Eşik Değer Karşılaştırması:} Elde edilen olasılık değeri, belirli bir eşik değer (0.5) üezrindeyse örnek "1" sınıfına atanır, değilse "0" sınıfına atanır.
+\item \textbf{Model Eğitimi:} Model, eğitim verileri üzerinde eğitilir.
+\end{enumerate}
+
+\subsection{Destek Vektör Makineleri}
+Temel amacı, verileri bir hiperdüzlem üzerinde sınıflandırmak veya regresyon analizi yapmaktır. SVM, bu hiperdüzlemi oluştururken, sınıflar arasındaki en büyük marjı (boşluk) bulmaya çalışır. Marj, hiperdüzleme en yakın veri noktalarından uzaklık olarak tanımlanır ve bu noktalara "destek vektörleri" denir. Hiperdüzlem, bu destek vektörleri arasında yer alır ve iki sınıf arasındaki boşluğu maksimize eder. SVM'nin çalışma prensibi matematiksel olarak iki sınıf için aşağıdaki şekilde ifade edilir: \\
+\\
+Veri noktası: (x,y) Hiperdüzlem: ${w * x + b = 0}$
+\begin{itemize}
+\item w: Hiperdüzlemi belirleyen normal vektör (ağırlıklar).
+\item x: Veri noktasının özellik vektörü.
+\item b: Bias terimi.
+\end{itemize}
+
+Sınıf tahminlemesi yapmak için, veri noktasını hiperdüzlem formülüne yerleştiririz:
+\begin{itemize}
+\item Eğer ${w * x+b>0}$ ise, veri noktası sınıf +1'e aittir.
+\item Eğer ${w * x+b<0}$ ise, veri noktası sınıf -1'e aittir.
+\end{itemize}
+
+\subsection{K En Yakın Komşu}
+KNN, veri noktalarının komşularına dayalı olarak sınıflandırılmasını veya tahmin edilmesini sağlayan bir algoritmadır. Temel fikir, bir veri noktasının sınıfını veya değerini belirlemek için, bu noktanın en yakın komşularının sınıfını veya değerlerini kullanmaktır.
+
+\subsubsection{Çalışma Prensibi ve Adımları}
+Tahmin yapılacak yeni veri noktası ile eğitim verilerindeki diğer noktalar arasındaki uzaklığı hesaplanır. Genellikle kullanılan uzaklık ölçüleri;
+\begin{itemize}
+\item \textbf{Euclidean (Öklidyen):} İki nokta arasındaki doğru mesafeyi ölçer.
+\item \textbf{Manhattan:} İki nokta arasındaki yolların toplam uzunluğunu ölçer.
+\item \textbf{Chebyshev:} Vektörler arasındaki mutlak farkın maksimumunu alır. Daha sonra en yakın "k" komşusu seçilir. k, bir hiperparametredir ve kullanıcı tarafından belirlenmelidir.
+\item \textbf{Sınıflandırma Problemi:} Eğer KNN sınıflandırma amaçlı kullanılıyorsa, en yakın k komşunun sınıfları incelenir ve yeni veri noktasının sınıfı, bu k komşunun sınıfının çoğunluğu (modu) olarak tahmin edilir. Örneğin, eğer 3 en yakın komşu sınıfları "A", "A", ve "B" ise, yeni veri noktasının tahmini sınıfı "A" olur.
+\item \textbf{Regresyon Problemi:} Eğer KNN regresyon amaçlı kullanılıyorsa, en yakın k komşunun hedef değerleri kullanılarak yeni veri noktasının hedef değeri tahmin edilir. Genellikle bu değerlerin ortalaması veya ağırlıklı ortalaması kullanılır.
+\end{itemize}
+
+\subsection{Karar Ağacı}
+Karar ağacı, bir veri setini, bir dizi karar uygulayarak daha küçük kümelere bölmek için kullanılan bir yapıdır. Karar ağacında ilk bölünmenin başladığı yere kök, dalların uzaması ile gelişen kısımlara düğüm, alt uçlara ise yaprak denir. Karar ağaçları, en iyi bölünmeyi seçmek için farklı kriterler kullanır. Daha uzun ağaçlar yerine daha kısa ağaçlar tercih edilir. En yaygın olarak kullanılan kriterler.
+Bilgi Kazancı (Information Gain): Bir düğümün bölünmesinin ne kadar bilgi kazandıracağını ölçer. Bilgi kazancı, her alt düğümün belirli bir özellikle ne kadar homojen olduğunu gösteren bir metriktir. Bilgi kazancı, bir özellikle yapılan bölünmenin önceki duruma göre ne kadar daha az belirsizlik (bilgi eksikliği) getirdiğini ölçer. Bu, ağacın daha homojen alt gruplara bölünmesine ve iyi tahminler yapmasına yardımcı olur. Sırasıyla şu adımlar izlenir:
+\begin{enumerate}
+\item \textbf{Entropi (Entropy):} Bir veri kümesinin ne kadar homojen veya heterojen olduğunu ölçen bir kavramdır. Daha yüksek entropi, daha fazla belirsizlik veya bilgi eksiliği anlamına gelir. Entropi şu formülle hesaplanır: \\ $H(X) = - \sum_{i=1}^{n} P(x_i) \cdot \log_{2} P(x_i)$, burada p1, p2, ..., pk, S'deki her sınıfın olasılıklarıdır.
+\item \textbf{Dallanma (Split):} Bir özellik seçilir ve veri kümesi bu özelliğe göre alt gruplara bölünür. Her alt grup için entropi hesaplanır ve bu alt grupların ağırlıklı ortalaması (weighted average) alınır.
+\item \textbf{Bilgi Kazancı (Information Gain):} Entropinin önceki durum ile yeni durum arasındaki farkını ölçer. Information Gain yüksekse, o özellik daha fazla bilgi kazandırır ve ağacın bölünmesinde daha önemli bir rol oynar.
+\end{enumerate}
+
+\subsubsection{Çalışma Prensibi ve Adımları}
+
+\begin{enumerate}
+\item \textbf{Veri Toplama:} Özellikler ve hedef değişken belirlenir.
+\item \textbf{Ağaç Oluşturma:} Ağacın kök düğümü seçilir ve veriler bu düğümde belirli bir özelliğe göre bölünür. Ardından, her alt düğüm için aynı adım tekrarlanır.
+\item \textbf{Düğüm Bölünmesi:} Düğümler, en iyi bölünme kriterine göre alt düğümlere bölünür. Bölünme kriterleri genellikle bilgi kazancı, gini indeksi veya ortalama hata gibi metrikler kullanılarak belirlenir.
+\item \textbf{Ağaç Düzenleme:} Ağaç gereğinden fazla dallanma yapabilir. Bu nedenle gereksiz dallar kaldırılmaldır. Budama (pruning), arar ağacında tahmine yeterince katkı yapmayan dallarda tahmin edici değişkenlerin modelden çıkarılması işlemidir. Post ve Pre olarak ikiye ayrılır. Prepruning, tahmin edici değişkenleri teker teker ele alarak modelin tahmin gücü için hangisinin etkili olacağı kararlaştırılarak adım adım dallanmaların ilerletilmesidir. Postpruning, tamamlanmış bir karar ağacından modele katkı yapmayan dalların tespit edilip modelden çıkarılmasıdır.
+\item \textbf{Tahmin:} Yeni veriler için tahminler yapılır.
+\end{enumerate}
+
+\subsection{Adaptif Güçlendirme}
+AdaBoost, düşük başarımlı modeller olarak adlandırılan zayıf öğrenicileri bir araya getirerek daha güçlü bir öğrenici oluşturan bir toplu öğrenme algoritmasıdır. Temel amacı, zayıf modellerin sınırlı başarılarını birleştirerek genelde daha güçlü ve genelleyici bir model elde etmektir. Bu algoritma, tek başına başarılı olamayabilecek basit modellerin gücünü birleştirerek genelleme yeteneğini artırır ve aşırı öğrenmeyi azaltır.
+
+\subsubsection{Çalışma Prensibi ve Adımları}
+\begin{enumerate}
+\item \textbf{Başlangıç Modeli Seçimi:} İlk olarak, veri seti üzerinde bir zayıf öğrenici (örneğin, bir karar ağacı) seçilir ve eğitilir.
+\item \textbf{Hata Hesaplama:} Modelin üzerinde çalıştığı örnekler arasındaki hatalar hesaplanır, yanlış sınıflandırılan örneklerin ağırlığı arttırılır.
+\item \textbf{Ağırlıklı Veri Seti Oluşturma:} Hataların ağırlıklarına göre ayarlandığı yeni bir ağırlıklı veri seti oluşturulur. Bu, daha fazla vurgu gerektiren hatalı örnekleri içerir.
+\item \textbf{Yeni Modelin Eğitimi:} Yeni ağırlıklı veri seti üzerinde bir sonraki zayıf öğrenici eğitilir. Bu öğrenici, önceki hatalara daha fazla odaklanarak modelin zayıflıklarını düzeltmeye çalışır.
+\item \textbf{Ağırlık Güncelleme:} Her öğrenici eklendikten sonra, modelin performansına göre her öğrenicinin ağırlığı belirlenir. Daha başarılı modeller daha fazla ağırlığa sahip olur.
+\item \textbf{Sonuç Oluşturma:} Tüm zayıf öğrenicilerin bir araya getirilmesiyle güçlü bir öğrenici elde edilir. Her öğrenici katkısının ağırlığına göre final tahminler yapılır.
+\end{enumerate}
+
+\subsection{Gradyan Güçlendirme}
+Gradient Boosting, zayıf öğrenicileri bir araya getirerek güçlü bir öğrenici oluşturan bir makine öğrenimi yöntemidir. Adım adım hatayı düzelterek modeli iyileştirir. Bu teknik, özellikle sayıları tahmin etme veya nesneleri sınıflandırma gibi görevlerde kullanışlıdır. Ancak, model çok karmaşıksa, aşırı uyuma dikkat etmek önemlidir. 
+
+\subsubsection{Çalışma Prensibi ve Adımları}
+\begin{enumerate}
+\item \textbf{Başlangıç Modeli:} İlk olarak, bir başlangıç modeli (genellikle bir karar ağacı) seçilir ve eğitilir.
+\item \textbf{Hata Hesaplama:} Başlangıç modelinin tahminlerindeki hatalar hesaplanır.
+\item \textbf{Hata Temelinde Yeni Model:} Hatalar üzerine odaklanarak yeni bir model daha eklenir. Bu model, önceki modelin hatalarını düzeltmeye çalışır.
+\item \textbf{Ağırlıklı Hata:} Her öğrenici eklenip hatalar düzeltildikçe, her veri örneğinin hata oranlarına göre ağırlıkları güncellenir. Hatalı tahminlere daha fazla ağırlık verilir.
+\item \textbf{Toplam Tahmin Oluşturma:} Tüm öğrenicilerin tahminleri bir araya getirilerek toplam tahmin oluşturulur. Bu, her öğrenicinin katkısının önceki hataları düzeltmeye odaklandığı bir şekilde gerçekleşir.
+\item \textbf{İteratif Süreç:} Bu süreç belirli bir iterasyon sayısına veya belirli bir hata eşiğine ulaşana kadar devam eder. Her iterasyonda, yeni eklenen öğrenici, öncekilerin hatalarını düzeltmeye çalışarak modeli iyileştirir.
+\end{enumerate}
+
+\subsection{Aşırı Rassal Ağaçlar}
+Extra Trees (Extremely Randomized Trees), bir makine öğrenimi algoritmasıdır ve özellikle sınıflandırma ve regresyon problemleri için kullanılır. Extra Trees, Random Forest algoritmasına benzer bir yaklaşımı benimser ancak bazı farklar vardır. Extra Trees, karar ağaçları oluştururken daha fazla rastgelelik ekleyerek, çeşitli modeller oluşturur ve bu sayede genelleme yeteneğini artırır. Ancak, bu ekstra rastgelelik nedeniyle her bir ağacın ayrı ayrı ayarlanması veya yüksek varyanslı veri setlerinde başarılı olabilmesi mümkündür.
+
+\subsubsection{Çalışma Prensibi ve Adımları}
+\begin{enumerate}
+\item \textbf{Alt Örneklemler ve Özellik Seçimi:} Her bir ağaç için, veri setinden rastgele bir alt örneklem ve rastgele bir özellik alt kümesi seçilir.
+\item \textbf{Karar Ağacı Oluşturma:} Seçilen alt örneklem ve özellik alt kümesi üzerinde bir karar ağacı oluşturulur. Bu ağaç, geleneksel karar ağaçlarından farklı olarak, düğümlerdeki bölünmeleri rastgele seçer.
+\item \textbf{Ağaçların Birleştirilmesi:} Belirtilen sayıda karar ağacı oluşturulduktan sonra, bu ağaçlar bir araya getirilir ve toplu bir model oluşturulur.
+\item \textbf{Oylama veya Ortalama:} Sınıflandırma problemlerinde genellikle çoğunluk oylaması, regresyon problemlerinde ise ağaçların tahminlerinin ortalaması kullanılarak final tahmin yapılır.
+\end{enumerate}
+
+\subsection{Stokastik Gradyan İnişi}
+SGD , bir optimizasyon algoritmasıdır ve özellikle büyük veri setleri üzerinde eğitim yaparken etkilidir. Genellikle makine öğrenimi modellerini eğitmek için kullanılır. SGD, özellikle büyük veri setleri üzerinde etkilidir, çünkü her eğitim örnekleri üzerinde ağırlık güncellemesi yaparak hızlı bir şekilde öğrenmeyi sağlar. Ayrıca, modellerin online eğitimini ve gerçek zamanlı uygulamalarda kullanımı kolaylaştırır.
+
+\subsubsection{Çalışma Prensibi ve Adımları}
+\begin{enumerate}
+\item \textbf{Başlangıç Parametreleri:} Modelin başlangıç parametreleri (ağırlıklar ve biaslar) rastgele veya belirli bir stratejiye dayanarak belirlenir.
+\item \textbf{Veri Setinin Karıştırılması:} Veri seti, modelin eğitimini daha iyi ve daha hızlı hale getirmek için karıştırılır. Bu, her bir eğitim döngüsünde farklı örneklerin model tarafından işlenmesini sağlar.
+\item \textbf{Stokastik Gradyan Hesaplaması:} Her bir örnek üzerinde modelin gradyanı (eğiminin) hesaplanır. Bu, maliyet fonksiyonunun modelin mevcut parametreleriyle ne kadar değiştirilmesi gerektiğini gösterir.
+\item \textbf{Parametre Güncellemesi:} Hesaplanan gradyan kullanılarak modelin parametreleri güncellenir. SGD, her örnek üzerinde tek bir güncelleme yapar, bu nedenle "stokastik" olarak adlandırılır.
+\item \textbf{Maliyet Fonksiyonunun Hesaplanması:} Güncellenmiş parametrelerle maliyet fonksiyonu hesaplanır. Maliyet, modelin tahminlerinin gerçek değerlerden ne kadar sapma gösterdiğini ölçer.
+\item \textbf{Konverjans Kontrolü:} Belirli bir konverjans kriterine veya belirli bir epoch (eğitim döngüsü) sayısına ulaşıncaya kadar bu adımlar tekrarlanır.
+\end{enumerate}
+
+\subsection{Ekstrem Gradyan Arttırma}
+XGBoost , ağaç tabanlı modelleme yaklaşımı kullanarak özellikle sınıflandırma ve regresyon problemleri için kullanılan bir makine öğrenimi algoritmasıdır. Gradient Boosting yöntemini temel alan XGBoost, önceki öğrenicilerin hatalarını düzeltmeye odaklanarak, bir dizi zayıf öğreniciyi birleştirir ve güçlü bir öğrenici oluşturur. XGBoost, performansı ve hızı artırmak için bir dizi optimize edilmiş algoritma ve özellik içerir. Ayrıca, özellik seçimi, aşırı öğrenme kontrolü, eksik veri yönetimi ve hızlı eğitim gibi avantajlara sahiptir. 
+
+\subsubsection{Çalışma Prensibi ve Adımları}
+\begin{enumerate}
+\item \textbf{Başlangıç Modeli:} İlk öğrenici, genellikle küçük bir karar ağacıdır. Bu ağaç, veri setini sınıflandırmaya veya bir çıktı değeri tahmin etmeye çalışır.
+\item \textbf{Hataların Hesaplanması:} İlk öğrenici tarafından yapılan tahminlerin hataları hesaplanır. Hatalar, gerçek değerler ile önceki tahminler arasındaki farkları ifade eder.
+\item \textbf{İkinci Öğrenici:} İlk öğrenicinin hatalarını düzeltmeye odaklanarak ikinci bir öğrenici eklenir. İkinci öğrenici, hataları minimize etmeye çalışır.
+\item \textbf{Ağırlıklı Toplama:} İlk ve ikinci öğrenicilerin tahminleri, hatalarına göre ağırlıklı bir şekilde toplanır. Bu, her bir öğrenicinin katkısının belirlenmesine yardımcı olur.
+\item \textbf{Devam Eden İterasyonlar:} Hata düzeltme ve ağırlıklı toplama işlemleri belirli bir iterasyon (epoch) sayısına veya hata eşiğine ulaşılıncaya kadar devam eder. Her bir iterasyonda, yeni öğreniciler eklenir ve model geliştirilir.
+\end{enumerate}
+
+\subsection{Hafif Gradyan Arttırma Makineleri}
+LightGBM , özellikle büyük veri setleri, yüksek boyutlu özellik uzayları ve hızlı model eğitimi gerektiren durumlar için uygundur. LightGBM, histogram tabanlı öğrenme ve düzenlileştirilmiş öğrenme algoritmalarını kullanarak efektif bir şekilde çalışır. Modelin performansını artırır ve overfitting'i kontrol altında tutar. LightGBM, sınıflandırma, regresyon ve sıralama gibi çeşitli problemleri çözmek için kullanılır. 
+
+\subsubsection{Çalışma Prensibi ve Adımları}
+\begin{enumerate}
+\item \textbf{Histogram Tabanlı Öğrenme:} LightGBM, veri setini önceden oluşturulmuş histogramlara dönüştürerek çalışır. Bu, özellik değerlerini bölme noktalarına dönüştürmek ve veriyi daha hızlı işlemek için kullanılır.
+\item \textbf{Yerleşik Paralel İşleme:} LightGBM, büyük veri setlerini paralel olarak işleyebilen dağıtılmış bir yapıya sahiptir. Bu, eğitim süresini hızlandırır ve ölçeklenebilirliği artırır.
+\item \textbf{Düzenlileştirilmiş Öğrenme:} Düzenlileştirilmiş öğrenme algoritmaları, LightGBM'nin aşırı uyumu kontrol etmesine yardımcı olur. Bu, ağaçların karmaşıklığını sınırlar ve genelleme yeteneğini artırır.
+\item \textbf{Ağaç Büyütme ve Eğitim:} LightGBM, öğrenme işlemi sırasında ağaçları aşama aşama büyütür. Her ağaç, önceki ağaçların hatalarını düzeltmeye odaklanarak eklenir.
+\item \textbf{Gradient Boosting:} LightGBM, önceki öğrenicilerin hatalarını azaltmaya çalışarak ağaçları birleştirir. Bu, gradient boosting yöntemini temel alır.
+\end{enumerate}
+
+\subsection{CatBoost}
+CatBoost, özellikle kategorik değişkenlerle çalıştığımızda, hızlı model eğitimi ve güçlü performans sağlamak için tasarlanmıştır. CatBoost, sınıflandırma, regresyon ve sıralama gibi çeşitli problemleri çözmek için kullanılır.
+
+\subsubsection{Çalışma Prensibi ve Adımları}
+\begin{enumerate}
+\item \textbf{Kategori Özelliklerinin Otomatik İşlenmesi:} CatBoost, kategorik özellikleri doğrudan kullanabilir ve bu özelliklerin içerdiği bilgileri otomatik olarak işleyebilir. Bu, veri mühendisliği aşamasında kategori özelliklerinin dönüştürülmesi veya kodlanmasına gerek olmadığı anlamına gelir.
+\item \textbf{Başlangıç Ağacı Modeli:} CatBoost, genellikle bir başlangıç ağacı modeli ile başlar. Bu ağaç, basit bir modelle başlayarak gradient boosting algoritmasıyla birleştirilir.
+\item \textbf{Ağaç Büyütme ve Düzeltme:} Her bir öğrenici, önceki öğrenicilerin hatalarını düzeltmeye odaklanarak eklenir. Bu, gradient boosting'in temel prensibidir.
+\item \textbf{Simetrik Yapı:} CatBoost, önceki ağaçlardan gelen hataların düzeltilmesi için simetrik ağaç yapısı kullanır.
+\item \textbf{Dengeli Örnek Ağırlıkları:} CatBoost, sınıflandırma problemlerinde dengesiz veri setlerini ele almak için özel bir ağırlıklandırma stratejisi kullanır.
+\item \textbf{Kategorik Değişkenlere Özel Optimizasyon:} CatBoost, kategorik değişkenlerin kullanımını optimize etmek ve ağırlıklarını otomatik olarak ayarlamak için özel bir içsel optimizasyon stratejisi kullanır.
+\end{enumerate}
+
+\subsection{Multi Layer Perceptron}
+MLP , yapay sinir ağlarının bir türüdür ve özellikle derin öğrenme alanında kullanılan bir modeldir. MLP, en azından bir giriş katmanı, bir veya daha fazla gizli katman ve bir çıkış katmanından oluşur. Her katman, birbirine bağlı nöronlardan oluşur ve bu nöronlar, ağırlıklar ve aktivasyon fonksiyonları ile ilişkilidir.
+
+\subsubsection{Çalışma Prensibi ve Adımları}
+\begin{enumerate}
+\item \textbf{Giriş Katmanı:} İlk katman, veri setindeki özellikleri temsil eder. Her bir özellik, giriş katmanındaki bir nörona bağlanır.
+\item \textbf{Gizli Katmanlar:} Bir veya daha fazla gizli katman, öğrenme ve özellik öğrenme süreçlerini gerçekleştirir. Her gizli katmanın nöronları, önceki katmandaki nöronlardan gelen ağırlıklı toplamları ve bir aktivasyon fonksiyonu tarafından işlenmiş çıktıları alır.
+\item \textbf{Ağırlıkların ve Bias'ın Güncellenmesi:} Eğitim sürecinde, ağırlıklar ve bias'lar, modelin hata oranını minimize etmek amacıyla geri yayılım (backpropagation) algoritması ile güncellenir. Bu süreç, optimizasyon algoritmaları (örneğin, gradyan iniş) kullanılarak gerçekleştirilir.
+\item \textbf{Çıkış Katmanı:} Son katman, istenen çıktıyı üretir. Probleme bağlı olarak, bu katman bir tek nöron (regresyon problemleri) veya birden fazla nöron (sınıflandırma problemleri) içerebilir. Sınıflandırma problemlerinde genellikle softmax aktivasyon fonksiyonu kullanılır.
+\end{enumerate}
+
+\subsection{Naive Bayes}
+Naive Bayes algoritması, olasılık teorisine dayalı bir makine öğrenimi ve istatistiksel sınıflandırma algoritmasıdır. Temel olarak, bir nesnenin belirli bir sınıfa ait olma olasılığını tahmin etmek için kullanılır. Bu sınıflandırma algoritması, Bayes Teoremi'ne dayanır ve "naif" (ingenuous) olarak adlandırılır, çünkü sınıf tahminindeki özellikler arasındaki bağımsızlık varsayımı yapar, yani her özelliğin sınıfı etkileme olasılığı birbirinden bağımsızdır. 3 türü vardır;
+\begin{itemize}
+\item \textbf{Gaussian Naive Bayes:} Özellikler sürekli değer (continuous value) ise bu değerlerin bir gauss dağılımı veya diğer bir değişle normal dağılımdan örneklendiğini varsayar.
+\item \textbf{Multinominal Naive Bayes:} Çok sınıflı kategorileri sınıflandırmak için kullanılır.
+\item \textbf{Bernoulli Naive Bayes:} Multinominal Naive Bayes’e benzer şekilde sınıflandırma yapar. Ancak tahminler sadece ikili şekildedir.
+\end{itemize}
+
+\subsubsection{Çalışma Prensibi ve Adımları}
+$P(C_k | x) = \frac{P(x | C_k) \cdot P(C_k)}{P(x)}$
+\begin{itemize}
+\item P(A|B), B koşulu altında A'nın olasılığını temsil eder.
+\item P(A), A'nın önceden bilinen veya gözlemlenen olasılığını temsil eder.
+\item P(B|A), A'nın verildiği durumda B'nin olasılığını temsil eder.
+\item P(B), B'nin önceden bilinen veya gözlemlenen olasılığını temsil eder.
+\end{itemize}
+
+\newpage
